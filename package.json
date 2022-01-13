@@ -1,0 +1,24 @@
+{
+  "name": "canistrum",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "create-react":"create-react-app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OmerFarukGenc/Canistrum.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/OmerFarukGenc/Canistrum/issues"
+  },
+  "homepage": "https://github.com/OmerFarukGenc/Canistrum#readme",
+  "dependencies": {
+    "create-react-app": "^5.0.0"
+  }
+}
