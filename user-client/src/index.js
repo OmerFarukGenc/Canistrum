@@ -7,8 +7,8 @@ import { CookiesProvider } from "react-cookie";
 ReactDOM.render(
   <CookiesProvider>
     <React.StrictMode>
-    <App />
-  </React.StrictMode>
+      <App />
+    </React.StrictMode>
   </CookiesProvider>
   ,
   document.getElementById('root')

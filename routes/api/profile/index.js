@@ -13,7 +13,7 @@ router.get("/whoami",async (req,res) => {
     try{
         u = await user.find({username:req.username});
     }catch(err){
-        req.status(400);
+        req.status(404);
         res.send({username:null});
         return
     }

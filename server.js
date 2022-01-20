@@ -8,12 +8,15 @@ const fs = require("fs");
 const mongoose = require("mongoose")
 const cookieParser = require("cookie-parser")
 const authenticator = require("./middlewares/authenticator");
+const cors = require("cors");
 
 mongoose.connect("mongodb://localhost:27017/test");
 
 app.use(express.json());
 app.use(cookieParser());
 app.use(authenticator);
+app.use(cors());
+
 
 const mainRouter = (() => {
   const resultRouter = Router();

@@ -14,6 +14,7 @@ router.post("/login",async (req,res) => {
     const result = await user.find({username:username}).exec();
 
     if(result.length != 1){
+        res.status(401);
         res.send("username error");
         return
     }
