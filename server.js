@@ -12,10 +12,11 @@ const cors = require("cors");
 
 mongoose.connect("mongodb://localhost:27017/test");
 
+app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
 app.use(express.json());
 app.use(cookieParser());
 app.use(authenticator);
-app.use(cors());
+
 
 
 const mainRouter = (() => {
