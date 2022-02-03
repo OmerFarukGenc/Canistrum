@@ -1,0 +1,20 @@
+doctype
+html(lang='en')
+    head
+        meta(charset='utf-8')
+        script(src="https://code.jquery.com/jquery-2.2.4.js", integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=", crossorigin="anonymous")
+        title
+    body
+        form#edit-form
+            label ID
+            input#id(type="text",name="id",readonly=true,value=`${good._id}`)
+            label Name 
+            input#name(type="text",name="name",value=`${good.name}`)
+            label Old Price
+            input#oldPrice(type="text",name="oldPrice",value=`${good.oldPrice}`)
+            label New Price
+            input#newPrice(type="text",name="newPrice",value=`${good.newPrice}`)
+            button(type="submit") Update
+            button#back-to-list(type="button") Back to List
+
+        script(type='text/javascript', src="/pageScripts/crud/good/edit.js")
