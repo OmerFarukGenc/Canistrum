@@ -1,0 +1,28 @@
+doctype
+html(lang='en')
+    head
+        meta(charset='utf-8')
+        script(src="https://code.jquery.com/jquery-2.2.4.js", integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=", crossorigin="anonymous")
+    
+        title
+    body
+        h1 Goods
+        button#create-new(type="button") Create new good
+        table 
+            tr 
+                th ID
+                th Name
+                th Old Price 
+                th New Price 
+            each good in goods
+                tr 
+                    td
+                        a(href=`/crud/good/${good._id}`)= good._id
+                    td= good.name
+                    td= good.oldPrice
+                    td= good.newPrice
+                    td
+                        button(type="button", onClick=`del("${good._id}")`) X
+        
+            script(type='text/javascript', src="/pageScripts/crud/good/list.js")
+                

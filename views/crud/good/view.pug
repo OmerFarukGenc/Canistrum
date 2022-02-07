@@ -1,0 +1,23 @@
+doctype
+html(lang='en')
+    head
+        meta(charset='utf-8')
+        script(src="https://code.jquery.com/jquery-2.2.4.js", integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=", crossorigin="anonymous")
+    
+        title
+    body
+        h1 Good Details 
+        h2 ID
+        p=good._id
+        h2 Name
+        p=good.name
+        h2 Old Price
+        p=good.oldPrice
+        h2 New Price 
+        p=good.newPrice
+        button#back-to-list(type="button") Back to List
+        button(type="button", onClick=`del("${good._id}")`) Delete
+        a(href=`/crud/good/edit/${good._id}`)
+            button(type="button"/*, href="`/crud/good/${good._id}`"*/) Edit
+        script(type='text/javascript', src="/pageScripts/crud/good/view.js")
+             

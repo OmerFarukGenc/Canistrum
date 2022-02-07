@@ -16,8 +16,9 @@ app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
 app.use(express.json());
 app.use(cookieParser());
 app.use(authenticator);
+app.use(express.static(path.join(__dirname , "public")))
 
-
+app.set("view engine","pug");
 
 const mainRouter = (() => {
   const resultRouter = Router();
@@ -37,8 +38,8 @@ const mainRouter = (() => {
       resultRouter.use(currentPath, subRouter);
     }catch(err){
       
-      console.log("WARNING: 'index.js' not found on " + currentDir + " directory");
-      //console.log(err);
+      console.log("WARNING: ERROR ON " + currentDir + " directory");
+      console.log(err);
     }
     fs.readdirSync(currentDir, { withFileTypes: true })
       .filter(dirent => dirent.isDirectory())

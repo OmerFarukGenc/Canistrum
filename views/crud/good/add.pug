@@ -1,0 +1,19 @@
+html(lang='en')
+    head
+        meta(charset='utf-8')
+        script(src="https://code.jquery.com/jquery-2.2.4.js", integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=", crossorigin="anonymous")
+    
+        title
+    body
+        form#add-form
+            label Name 
+            input#name(type="text",name="name")
+            label Old Price
+            input#oldPrice(type="text",name="oldPrice")
+            label New Price
+            input#newPrice(type="text",name="newPrice")
+            button(type="submit") Add
+            button#back-to-list(type="button") Back to List
+            script(type='text/javascript', src="/pageScripts/crud/good/add.js")
+
+
