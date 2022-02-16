@@ -1,6 +1,6 @@
 import React from "react";
 import Cookies from "js-cookie";
-import { Alert, Button } from "react-bootstrap";
+import { Alert, Button, Card, Col, Container, Row, Stack } from "react-bootstrap";
 import axios from "axios";
 
 
@@ -11,7 +11,7 @@ class LoggedScreen extends React.Component {
     super(props);
     //this.setState({username:""});
 
-    this.state = { username: "", basket: [], inflation: "" }
+    this.state = { username: "", basket: [], inflation: "" , calc:false}
     //this.getUsername();
     //this.getUsername = this.getUsername.bind(this);
   }
@@ -78,38 +78,82 @@ class LoggedScreen extends React.Component {
     console.log("BASKET " + JSON.stringify(this.state.basket));
     const res = await axios.post("http://localhost:8000/api/calculation", this.state.basket);
     console.log(JSON.stringify(res));
-    const result = "Your inflastion is %" + res.data.inflation
-    this.setState({ inflation:  result  });
+    const result = "Your inflation is %" + res.data.inflation
+    this.setState({ inflation: result });
     console.log(this.state.inflation);
+    this.setState({calc:true});
   }
 
- 
+
 
   render() {
-    return (<div><p>welcome {this.state.username}</p>
+    /*
+*/
 
-      <Button onClick={() => this.handleExit()}>exit</Button>
+    return (
+      <Container fluid className="border p-1 rounded ">
+        <Row className="p-0 m-0 border-primary rounded">
+          <Col className="p-0 m-0">
+            <Alert className="m-0 ">
+              <h1 className="m-0">
+                Welcome {this.state.username}
+              </h1>
+            </Alert>
+          </Col>
+          <Col xs={"auto"} className="d-flex p-0 justify-content-end">
+            <Button variant="danger" onClick={() => this.handleExit()}>Exit</Button>
 
-      <ul>
-        {this.state.basket.map(element => {
+          </Col>
 
-          return <li key={element["id"]}>
-            {element["name"]}
-            <button onClick={() => { this.decrement(element["id"]) }}>-</button>
-            {element["amount"]}
-            <button onClick={() => { this.increment(element["id"]) }}>+</button>
-          </li>;
-        })
-        }
-      </ul>
+        </Row>
 
-      <button onClick={() => { this.calculateInflation() }}>Calculate Inflation</button>
+        <Row className="bg-light  border-primary rounded p-1 m-0 ">
+          <Col xs={12} className="p-1 m-0 border border-light">
+            <h3 className="m-0 p-0">
+              Your Basket:
+            </h3>
+          </Col>
+          <Col className="m-0 p-0">
+            <Row className=" border-secondary rounded m-0 p-0">
 
-      <div key="inf">{this.state.inflation}
-      </div>
+              {this.state.basket.map(element => {
+
+                return <Col  xs={12} sm={6} md={4} lg={3} xl={2} xxl={1} className="m-0 p-0" key={element["id"]}>
+                  <Card className="h-100">
+                    <Card.Header className="h-100 d-flex align-items-center ">
+                      <h5 className="m-0 p-0"> 
+                        {element["name"]}
+                      </h5>
+                    </Card.Header>
+                    <Card.Body className="p-0 d-flex justify-content-between align-items-center">
+                      <button className="btn btn-secondary" onClick={() => { this.decrement(element["id"]) }}>-</button>
+
+                      <span>{element["amount"]}</span>
+                      <button className="btn btn-primary" onClick={() => { this.increment(element["id"]) }}>+</button>
+                    </Card.Body>
+                  </Card>
+                </Col>;
+              })
+              }
+
+            </Row>
+          </Col>
+        </Row>
+
+        <Row className="bg-light border border-seconday rounded p-0 m-0">
+          <Col className="p-1 m-0">
+            <Button variant="success" onClick={() => { this.calculateInflation() }}>Calculate Inflation</Button>
+          </Col>
+          <Col className={"p-1 m-0 d-flex border-primary rounded justify-content-end align-items-center" + (this.state.calc ? " border":" ")}>
+            <p className="m-0">
+            {this.state.inflation}
+            </p>
+          </Col>
+        </Row>
 
 
-    </div>);
+      </Container>
+    );
   }
 
 

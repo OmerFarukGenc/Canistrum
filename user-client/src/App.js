@@ -30,9 +30,6 @@ class App extends React.Component {
 
   render() {
     return (
-      <Container >
-        <Row>
-          <Col className="col-4">
             <Router>
               <Routes>
                 <Route path="/login" element={<LoginScreen />} />
@@ -40,9 +37,6 @@ class App extends React.Component {
                 <Route path="/profile" element={<LoggedScreen />} />
               </Routes>
             </Router>
-          </Col>
-        </Row>
-      </Container>
     )
   }
 }
