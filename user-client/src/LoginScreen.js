@@ -1,6 +1,7 @@
 import React from "react";
 import Cookies from "js-cookie";
 import { Form,Button,Container } from "react-bootstrap";
+import { pathStore } from "./stores";
 
 const axios = require("axios").default;
 
@@ -36,7 +37,8 @@ class LoginScreen extends React.Component {
         const token = res.data.token;
         Cookies.set("token", token);
         console.log(Cookies.get("token"));
-        window.location = "/profile";
+        //window.location = "/profile";
+        pathStore.dispatch({type:"",path:"profile"});
       }
     } catch (err) {
       console.log(err);

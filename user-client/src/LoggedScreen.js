@@ -2,6 +2,7 @@ import React from "react";
 import Cookies from "js-cookie";
 import { Alert, Button, Card, Col, Container, Row, Stack } from "react-bootstrap";
 import axios from "axios";
+import {pathStore} from "./stores/index";
 
 
 
@@ -44,14 +45,17 @@ class LoggedScreen extends React.Component {
       }
     } catch (err) {
       console.log(err);
-      window.location = "/login";
+      //window.location = "/login";
+      pathStore.dispatch({type:"",path:"login"});
+
     }
   }
 
   handleExit = () => {
     console.log("exit");
     Cookies.remove("token");
-    window.location = "/login";
+    //window.location = "/login";
+    pathStore.dispatch({type:"",path:"login"});
   }
 
   increment(id) {
@@ -91,7 +95,7 @@ class LoggedScreen extends React.Component {
 */
 
     return (
-      <Container fluid className="border p-1 rounded ">
+      <Container fluid className="border p-2 rounded ">
         <Row className="p-0 m-0 border-primary rounded">
           <Col className="p-0 m-0">
             <Alert className="m-0 ">
