@@ -1,7 +1,7 @@
 import React from "react";
 import Cookies from "js-cookie";
 import { Form,Button,Container } from "react-bootstrap";
-import { pathStore } from "./stores";
+import { store} from "./stores";
 
 const axios = require("axios").default;
 
@@ -16,7 +16,24 @@ class LoginScreen extends React.Component {
 
   componentDidMount() {
     //this.state = {errorMessage:""};
+
+    this.isLoggedIn();
   }
+
+  async isLoggedIn() {
+    console.log(Cookies.get("token"));
+    try {
+      const res = await axios.get("http://localhost:8000/api/profile/whoami", { withCredentials: true });
+      if (res.status == 200) {
+        store.dispatch({type:"redirect",path:"profile"})
+        return;
+      }
+    } catch (err) {
+      //console.log(err);
+      return
+    }
+  }
+
 
 
   handleUsernameChange(e) {
@@ -38,7 +55,7 @@ class LoginScreen extends React.Component {
         Cookies.set("token", token);
         console.log(Cookies.get("token"));
         //window.location = "/profile";
-        pathStore.dispatch({type:"",path:"profile"});
+        store.dispatch({type:"redirect",path:"profile"});
       }
     } catch (err) {
       console.log(err);
@@ -47,6 +64,8 @@ class LoginScreen extends React.Component {
     //console.log("" + this.state.username + " " + this.state.password);
 
   }
+
+
 
   render() {
     /*<form>

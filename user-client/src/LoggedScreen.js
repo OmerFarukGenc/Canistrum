@@ -2,8 +2,32 @@ import React from "react";
 import Cookies from "js-cookie";
 import { Alert, Button, Card, Col, Container, Row, Stack } from "react-bootstrap";
 import axios from "axios";
-import {pathStore} from "./stores/index";
+import { store } from "./stores/index";
+import {exit,isLoggedIn} from "./services/index";
 
+function ProductCard(props){
+
+
+  return (
+    <Col xs={12} sm={6} md={4} lg={3} xl={2} xxl={1} className="m-0 p-0" key={props["id"]}>
+  <Card className="h-100">
+    <Card.Header className="h-100 d-flex align-items-center ">
+      <h5 className="m-0 p-0">
+        {props.name}
+      </h5>
+    </Card.Header>
+    <Card.Body className="p-0 d-flex justify-content-between align-items-center">
+      <button className="btn btn-secondary" onClick={() => { props.onDecrement() }}>-</button>
+
+      <span>{props.amount}</span>
+      <button className="btn btn-primary" onClick={() => { props.onIncrement() }}>+</button>
+    </Card.Body>
+  </Card>
+  </Col>
+  );
+
+
+}
 
 
 class LoggedScreen extends React.Component {
@@ -12,50 +36,49 @@ class LoggedScreen extends React.Component {
     super(props);
     //this.setState({username:""});
 
-    this.state = { username: "", basket: [], inflation: "" , calc:false}
+    this.state = { username: store.getState().username, basket: [], inflation: "", calc: false }
     //this.getUsername();
     //this.getUsername = this.getUsername.bind(this);
   }
 
   componentDidMount() {
-    this.getUsername();
-    this.getGoodList();
+    this.setBasket();
+    this.setUsername();
+  }
+
+  setUsername() {
+
 
   }
 
-  async getGoodList() {
-    const res = await axios.get("http://localhost:8000/api/crud/good");
-    //console.log(JSON.stringify(res));
-    var tempBasket = [];
-    for (var g in res.data) {
-      tempBasket.push({ id: res.data[g]._id, name: res.data[g].name, amount: 0 })
+  setBasket() {
+    console.log("BASKET IN STATE: " + JSON.stringify(store.getState()))
+    const basket = store.getState().basket;
+    this.setState({basket:basket})
+    store.subscribe(() => {
+      this.setState({basket:store.getState().basket})
+    })
+  }
+
+
+  async setUsername() {
+    const username = store.getState().username;
+    if(username == null || (await isLoggedIn())){
+      exit();
     }
-    this.setState({ basket: tempBasket });
-    console.log(JSON.stringify(this.state.basket));
+    this.setState({username:username});
+    store.subscribe(() => {
+      this.setState({username: store.getState().username});
+    })
   }
 
-  async getUsername() {
-    console.log(Cookies.get("token"));
-    try {
-      const res = await axios.get("http://localhost:8000/api/profile/whoami", { withCredentials: true });
-      if (res.status = 200) {
-        this.setState({ username: res.data.username });
-        return;
-        //return <span>res.data.username</span>;
-      }
-    } catch (err) {
-      console.log(err);
-      //window.location = "/login";
-      pathStore.dispatch({type:"",path:"login"});
-
-    }
-  }
 
   handleExit = () => {
+
+
     console.log("exit");
     Cookies.remove("token");
-    //window.location = "/login";
-    pathStore.dispatch({type:"",path:"login"});
+    store.dispatch({ type: "redirect", path: "login" });
   }
 
   increment(id) {
@@ -85,7 +108,7 @@ class LoggedScreen extends React.Component {
     const result = "Your inflation is %" + res.data.inflation
     this.setState({ inflation: result });
     console.log(this.state.inflation);
-    this.setState({calc:true});
+    this.setState({ calc: true });
   }
 
 
@@ -119,27 +142,15 @@ class LoggedScreen extends React.Component {
           </Col>
           <Col className="m-0 p-0">
             <Row className=" border-secondary rounded m-0 p-0">
-
               {this.state.basket.map(element => {
-
-                return <Col  xs={12} sm={6} md={4} lg={3} xl={2} xxl={1} className="m-0 p-0" key={element["id"]}>
-                  <Card className="h-100">
-                    <Card.Header className="h-100 d-flex align-items-center ">
-                      <h5 className="m-0 p-0"> 
-                        {element["name"]}
-                      </h5>
-                    </Card.Header>
-                    <Card.Body className="p-0 d-flex justify-content-between align-items-center">
-                      <button className="btn btn-secondary" onClick={() => { this.decrement(element["id"]) }}>-</button>
-
-                      <span>{element["amount"]}</span>
-                      <button className="btn btn-primary" onClick={() => { this.increment(element["id"]) }}>+</button>
-                    </Card.Body>
-                  </Card>
-                </Col>;
-              })
-              }
-
+                return(
+                <ProductCard 
+                name={element["name"]} 
+                amount={element["amount"]} 
+                onIncrement={() => { this.increment(element["id"]) }} 
+                onDecrement={() => { this.decrement(element["id"]) }} />
+                )  
+              })}
             </Row>
           </Col>
         </Row>
@@ -148,9 +159,9 @@ class LoggedScreen extends React.Component {
           <Col className="p-1 m-0">
             <Button variant="success" onClick={() => { this.calculateInflation() }}>Calculate Inflation</Button>
           </Col>
-          <Col className={"p-1 m-0 d-flex border-primary rounded justify-content-end align-items-center" + (this.state.calc ? " border":" ")}>
+          <Col className={"p-1 m-0 d-flex border-primary rounded justify-content-end align-items-center" + (this.state.calc ? " border" : " ")}>
             <p className="m-0">
-            {this.state.inflation}
+              {this.state.inflation}
             </p>
           </Col>
         </Row>
@@ -164,3 +175,25 @@ class LoggedScreen extends React.Component {
 }
 
 export default LoggedScreen;
+
+
+
+/*{this.state.basket.map(element => {
+
+  return <Col xs={12} sm={6} md={4} lg={3} xl={2} xxl={1} className="m-0 p-0" key={element["id"]}>
+    <Card className="h-100">
+      <Card.Header className="h-100 d-flex align-items-center ">
+        <h5 className="m-0 p-0">
+          {element["name"]}
+        </h5>
+      </Card.Header>
+      <Card.Body className="p-0 d-flex justify-content-between align-items-center">
+        <button className="btn btn-secondary" onClick={() => { this.decrement(element["id"]) }}>-</button>
+
+        <span>{element["amount"]}</span>
+        <button className="btn btn-primary" onClick={() => { this.increment(element["id"]) }}>+</button>
+      </Card.Body>
+    </Card>
+  </Col>;
+})
+}*/
