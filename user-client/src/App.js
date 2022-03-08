@@ -1,9 +1,9 @@
-import LoginScreen from "./LoginScreen";
-import LoggedScreen from "./LoggedScreen";
+import LoginPage from "./pages/LoginPage";
+import BasketPage from "./pages/BasketPage";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Col, Container, Row } from "react-bootstrap";
 import React from "react";
-import { store } from "./stores/index";
+import store  from "./store/index";
 
 
 const axios = require("axios");
@@ -40,17 +40,12 @@ class App extends React.Component {
 
   componentDidMount() {
     
-
-
-
-
-    
     var currentPath = store.getState().path;
     this.state = { path: currentPath }
-    if (this.state.path == "profile") {
-      this.setState({ component: <LoggedScreen /> });
+    if (this.state.path == "basket") {
+      this.setState({ component: <BasketPage /> });
     } else if (this.state.path == "login") {
-      this.setState({ component: <LoginScreen /> });
+      this.setState({ component: <LoginPage /> });
     }
 
 
@@ -61,10 +56,10 @@ class App extends React.Component {
 
       this.state = { path: ppp }
       console.log(this.state.path);
-      if (this.state.path == "profile") {
-        this.setState({ component: <LoggedScreen /> });
+      if (this.state.path == "basket") {
+        this.setState({ component: <BasketPage /> });
       } else if (this.state.path == "login") {
-        this.setState({ component: <LoginScreen /> });
+        this.setState({ component: <LoginPage /> });
       }
 
     })

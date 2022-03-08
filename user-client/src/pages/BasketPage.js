@@ -2,120 +2,109 @@ import React from "react";
 import Cookies from "js-cookie";
 import { Alert, Button, Card, Col, Container, Row, Stack } from "react-bootstrap";
 import axios from "axios";
-import { store } from "./stores/index";
-import {exit,isLoggedIn} from "./services/index";
+import  store  from "../store/index";
+import { exit, isLoggedIn } from "../services/index";
+import interactors from "../services/interactors";
 
-function ProductCard(props){
+function ProductCard(props) {
 
 
   return (
     <Col xs={12} sm={6} md={4} lg={3} xl={2} xxl={1} className="m-0 p-0" key={props["id"]}>
-  <Card className="h-100">
-    <Card.Header className="h-100 d-flex align-items-center ">
-      <h5 className="m-0 p-0">
-        {props.name}
-      </h5>
-    </Card.Header>
-    <Card.Body className="p-0 d-flex justify-content-between align-items-center">
-      <button className="btn btn-secondary" onClick={() => { props.onDecrement() }}>-</button>
+      <Card className="h-100">
+        <Card.Header className="h-100 d-flex align-items-center ">
+          <h5 className="m-0 p-0">
+            {props.name}
+          </h5>
+        </Card.Header>
+        <Card.Body className="p-0 d-flex justify-content-between align-items-center">
+          <button className="btn btn-secondary" onClick={() => { props.onDecrement() }}>-</button>
 
-      <span>{props.amount}</span>
-      <button className="btn btn-primary" onClick={() => { props.onIncrement() }}>+</button>
-    </Card.Body>
-  </Card>
-  </Col>
+          <span>{props.amount}</span>
+          <button className="btn btn-primary" onClick={() => { props.onIncrement() }}>+</button>
+        </Card.Body>
+      </Card>
+    </Col>
   );
 
 
 }
 
 
-class LoggedScreen extends React.Component {
+class BasketPage extends React.Component {
   constructor(props) {
 
     super(props);
     //this.setState({username:""});
 
-    this.state = { username: store.getState().username, basket: [], inflation: "", calc: false }
+    this.state = { username: null, basket: [], inflation: null, calc: false }
     //this.getUsername();
     //this.getUsername = this.getUsername.bind(this);
+    this.bindBasket();
+    this.bindUsername();
+    this.bindInflation();
   }
 
   componentDidMount() {
-    this.setBasket();
-    this.setUsername();
+    this.bindBasket();
+    this.bindUsername();
+    this.bindInflation();
   }
 
-  setUsername() {
 
-
+  bindInflation() {
+    const inflation = store.getState().inflation;
+    this.setState({ inflation: inflation })
+    store.subscribe(() => {
+      this.setState({ inflation: store.getState().inflation })
+    })
   }
 
-  setBasket() {
-    console.log("BASKET IN STATE: " + JSON.stringify(store.getState()))
+  bindBasket() {
     const basket = store.getState().basket;
-    this.setState({basket:basket})
+    this.setState({ basket: basket })
     store.subscribe(() => {
-      this.setState({basket:store.getState().basket})
+      this.setState({ basket: store.getState().basket })
     })
   }
 
 
-  async setUsername() {
+  bindUsername() {
     const username = store.getState().username;
-    if(username == null || (await isLoggedIn())){
-      exit();
-    }
-    this.setState({username:username});
+    this.setState({ username: username });
     store.subscribe(() => {
-      this.setState({username: store.getState().username});
+      this.setState({ username: store.getState().username });
     })
   }
 
 
-  handleExit = () => {
-
-
-    console.log("exit");
-    Cookies.remove("token");
-    store.dispatch({ type: "redirect", path: "login" });
+  handleExit = async () => {
+    await interactors.userClickedExitButton()
   }
 
-  increment(id) {
-    for (var i = 0; i < this.state.basket.length; i++) {
-      if (this.state.basket[i].id == id) {
-        this.state.basket[i].amount++;
-      }
-    }
-    this.setState({ basket: this.state.basket });
+  increment = async (id) => {
+    await interactors.userIncreasedAmountByGoodId(id)
 
   }
 
-  decrement(id) {
-    for (var i = 0; i < this.state.basket.length; i++) {
-      if (this.state.basket[i].id == id) {
-        if (this.state.basket[i].amount > 0)
-          this.state.basket[i].amount--;
-      }
-    }
-    this.setState({ basket: this.state.basket });
+
+  decrement = async (id) => {
+    await interactors.userDecreasedAmountByGoodId(id)
   }
 
   async calculateInflation() {
-    console.log("BASKET " + JSON.stringify(this.state.basket));
-    const res = await axios.post("http://localhost:8000/api/calculation", this.state.basket);
-    console.log(JSON.stringify(res));
-    const result = "Your inflation is %" + res.data.inflation
-    this.setState({ inflation: result });
-    console.log(this.state.inflation);
-    this.setState({ calc: true });
+    await interactors.userClickedCalculateInflationOnBasketPage();
+    console.log(store.getState().inflation)
+    this.setState({calc:true})
   }
 
-
+  
 
   render() {
     /*
 */
+
+
 
     return (
       <Container fluid className="border p-2 rounded ">
@@ -143,13 +132,13 @@ class LoggedScreen extends React.Component {
           <Col className="m-0 p-0">
             <Row className=" border-secondary rounded m-0 p-0">
               {this.state.basket.map(element => {
-                return(
-                <ProductCard 
-                name={element["name"]} 
-                amount={element["amount"]} 
-                onIncrement={() => { this.increment(element["id"]) }} 
-                onDecrement={() => { this.decrement(element["id"]) }} />
-                )  
+                return (
+                  <ProductCard
+                    name={element["name"]}
+                    amount={element["amount"]}
+                    onIncrement={() => { this.increment(element["id"]) }}
+                    onDecrement={() => { this.decrement(element["id"]) }} />
+                )
               })}
             </Row>
           </Col>
@@ -174,7 +163,7 @@ class LoggedScreen extends React.Component {
 
 }
 
-export default LoggedScreen;
+export default BasketPage;
 
 
 
