@@ -1,50 +1,53 @@
 import React from "react";
 import Cookies from "js-cookie";
 import { Form,Button,Container } from "react-bootstrap";
+import store from "../store";
+import interactors from "../services/interactors";
 
 const axios = require("axios").default;
 
 
 
-class LoginScreen extends React.Component {
+class LoginPage extends React.Component {
   constructor(props) {
     super(props);
     //this.setState({ errorMessage: " " });
-    this.state = { errorMessage: "" }
+    this.state = { loginPageMessage: "" }
   }
 
   componentDidMount() {
-    //this.state = {errorMessage:""};
+    this.bindLoginPageMessage();
   }
 
-
-  handleUsernameChange(e) {
-    e.preventDefault();
-    this.setState({ username: e.target.value });
+  
+  async bindLoginPageMessage() {
+    const loginPageMessage = store.getState().loginPageMessage;
+    this.setState({loginPageMessage:loginPageMessage})
+    store.subscribe(() => {
+      const LoginPageMessage = store.getState().loginPageMessage;
+      this.setState({loginPageMessage:LoginPageMessage})
+    })
+    
   }
 
-  handlePasswordChange(e) {
+  async handleUsernameChange(e) {
     e.preventDefault();
-    this.setState({ password: e.target.value });
+    const formUsername = e.target.value;
+    console.log("EVENT" + formUsername)
+    await interactors.userChangedLoginFormUsername(formUsername)
+  }
+
+  async handlePasswordChange(e) {
+    e.preventDefault();
+    const formPassword = e.target.value;
+    await interactors.userChangedLoginFormPassword(formPassword)
   }
 
   async handleSubmit() {
-    try {
-      const res = await axios.post("http://localhost:8000/api/security/login", { username: this.state.username, password: this.state.password });
-      //console.log(JSON.stringify(res.data));
-      if (res.status == 200) {
-        const token = res.data.token;
-        Cookies.set("token", token);
-        console.log(Cookies.get("token"));
-        window.location = "/profile";
-      }
-    } catch (err) {
-      console.log(err);
-      this.setState({ errorMessage: "username or password is wrong" });
-    }
-    //console.log("" + this.state.username + " " + this.state.password);
-
+    await interactors.userClickedLoginButton();
   }
+
+
 
   render() {
     /*<form>
@@ -73,11 +76,11 @@ class LoginScreen extends React.Component {
           Login
         </Button>
        <Form.Group> 
-        <Form.Label className="mt-1">{this.state.errorMessage}</Form.Label>
+        <Form.Label className="mt-1">{this.state.loginPageMessage}</Form.Label>
       </Form.Group>
       </Form>
     );
   }
 }
 
-export default LoginScreen;
+export default LoginPage;
