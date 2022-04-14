@@ -12,6 +12,7 @@ const init = async () => {
 
 
     const username = await helpers.fetchUsernameByTokenFromCookies();
+    console.log("USERNAME " + username);
     if(username != null){
         await mutators.setUsername(username)
         await mutators.setPath("basket");

@@ -35,6 +35,8 @@ function reducer(state = defaultState, action) {
     } else if(action.type == "setLoginFormPassword"){
         state.loginFormPassword = action.loginFormPassword
         return state
+    } else if(action.type == "setLoginPageMessage"){
+        state.loginPageMessage = action.loginPageMessage;
     }
     return state;
 }

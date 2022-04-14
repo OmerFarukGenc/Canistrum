@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import Cookies from "js-cookie";
 import { Form,Button,Container } from "react-bootstrap";
 import store from "../store";
@@ -6,8 +6,56 @@ import interactors from "../services/interactors";
 
 const axios = require("axios").default;
 
+function LoginPage(props){
+  var currentLoginPageMessage = store.getState().loginPageMessage;
+  const [loginPageMessage,setLoginPageMessage] = useState(currentLoginPageMessage);
 
+  store.subscribe(() => {
+    const tempLoginPageMessage = store.getState().loginPageMessage;
+    setLoginPageMessage(tempLoginPageMessage)
+  })
 
+  const handleUsernameChange = async (e) => {
+    e.preventDefault();
+    const formUsername = e.target.value;
+    await interactors.userChangedLoginFormUsername(formUsername)
+  }
+
+  const handlePasswordChange = async (e) => {
+    e.preventDefault();
+    const formPassword = e.target.value;
+    await interactors.userChangedLoginFormPassword(formPassword)
+  }
+
+  const handleSubmit = async (e) => {
+    await interactors.userClickedLoginButton();
+  }
+
+  return (
+    <Form>
+      <Form.Group>
+        <Form.Label>
+          Username
+        </Form.Label>
+        <Form.Control type="text" name="username" onChange={(e) => handleUsernameChange(e)} />
+      </Form.Group>
+      <Form.Group>
+        <Form.Label>
+          Password
+        </Form.Label>
+        <Form.Control type="password" name="password" onChange={(e) => handlePasswordChange(e)} />
+      </Form.Group>
+      <Button className="mt-1" variant="primary" type="button" onClick={() => handleSubmit()}>
+        Login
+      </Button>
+     <Form.Group> 
+      <Form.Label className="mt-1">{loginPageMessage}</Form.Label>
+    </Form.Group>
+    </Form>
+  );
+}
+
+/*
 class LoginPage extends React.Component {
   constructor(props) {
     super(props);
@@ -33,7 +81,6 @@ class LoginPage extends React.Component {
   async handleUsernameChange(e) {
     e.preventDefault();
     const formUsername = e.target.value;
-    console.log("EVENT" + formUsername)
     await interactors.userChangedLoginFormUsername(formUsername)
   }
 
@@ -50,14 +97,7 @@ class LoginPage extends React.Component {
 
 
   render() {
-    /*<form>
-        <label>username</label>
-        <input id="username" name="username" type="text" onChange={(e) => this.handleUsernameChange(e)} />
-        <label>password</label>
-        <input id="password" name="password" type="password" onChange={(e) => this.handlePasswordChange(e)} />
-        <button type="button" onClick={() => this.handleSubmit()} >submit</button>
-        <label>{this.state.errorMessage}</label>
-      </form>*/
+    
     return (
       <Form>
         <Form.Group>
@@ -81,6 +121,6 @@ class LoginPage extends React.Component {
       </Form>
     );
   }
-}
+}*/
 
 export default LoginPage;
