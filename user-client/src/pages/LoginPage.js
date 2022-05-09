@@ -11,6 +11,7 @@ function LoginPage(props){
   const [loginPageMessage,setLoginPageMessage] = useState(currentLoginPageMessage);
 
   store.subscribe(() => {
+    console.log("####LoginPage store subscribe####");
     const tempLoginPageMessage = store.getState().loginPageMessage;
     setLoginPageMessage(tempLoginPageMessage)
   })

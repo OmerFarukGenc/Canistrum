@@ -11,7 +11,6 @@ const axios = require("axios");
 function App(props) {
   var currentPath = store.getState().path;
   var currentComponent = null;
-  console.log("CURRENT PATH " + currentPath);
   if (currentPath == "basket") {
     currentComponent = <BasketPage />
   } else if (currentPath == "login") {
@@ -22,6 +21,7 @@ function App(props) {
   const [component, setComponent] = useState(currentComponent);
 
   store.subscribe(() => {
+    console.log("####App store subscribe####");
     console.log(store.getState());
     var ppp = store.getState().path;
 

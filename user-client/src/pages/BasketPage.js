@@ -39,6 +39,7 @@ function BasketPage(props) {
   const [calc, setCalc] = useState(false);
   
   store.subscribe(() => {
+    console.log("####BasketPage store subscribe####");
     setBasket(store.getState().basket);
     setUsername(store.getState().username);
     setInflation(store.getState().inflation)

@@ -48,8 +48,7 @@ const decreaseBasketGoodAmountById = async (id = "") => {
 }
 
 const setLoginFormUsername = async (loginFormUsername = "") => {
-    store.dispatch(actions.setLoginFormUsername(loginFormUsername))
-    console.log("TTT"+store.getState().loginFormUsername)
+    store.dispatch(actions.setLoginFormUsername(loginFormUsername));
 }
 
 const setLoginFormPassword = async (loginFormPassword = "") => {

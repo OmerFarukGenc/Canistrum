@@ -16,7 +16,7 @@ const userClickedExitButton = async () => {
 const userClickedLoginButton = async () => {
     const username = store.getState().loginFormUsername;
     const password = store.getState().loginFormPassword;
-    console.log(username + "###" + password);
+
     const token = await helpers.fetchTokenByCredentials(username,password);
     if(token == null){
         await mutators.setLoginPageMessage("LOGIN ERROR")

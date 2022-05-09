@@ -1,6 +1,8 @@
 import { createStore, applyMiddleware } from "redux";
 import actions from "./actions";
 
+var count = 0;
+
 const defaultState = {
     path: "basket",
     username: null,
@@ -13,6 +15,8 @@ const defaultState = {
 }
 
 function reducer(state = defaultState, action) {
+
+    console.log("####COUNT IN REDUCER " + (count++) + "####");
 
     if (action.type == "setPath") {
         state.path = action.path
@@ -37,6 +41,7 @@ function reducer(state = defaultState, action) {
         return state
     } else if(action.type == "setLoginPageMessage"){
         state.loginPageMessage = action.loginPageMessage;
+        return state
     }
     return state;
 }
